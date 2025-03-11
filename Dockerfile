@@ -1,13 +1,15 @@
-FROM node:alpine AS builder
-WORKDIR /app
-ADD package*.json ./
-RUN npm ci
-ADD . .
-RUN npm run build --prod
+# Dockerfile
+FROM node:18-alpine
 
-FROM node:alpine
 WORKDIR /app
-COPY --from=builder /app/dist ./dist
-ADD package*.json ./
-RUN npm ci --omit=dev
-CMD [ "node","./dist/main.js" ]
+
+COPY package.json ./
+RUN npm install 
+
+COPY . .
+
+RUN npm run build
+
+CMD ["node", "dist/main.js"]
+
+EXPOSE 3000

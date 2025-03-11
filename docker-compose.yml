@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+
+  app:
+    container_name: nestjs-app
+    build: .
+    image: asilaaliqulova/nestjs-app
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/mydb
+    ports:
+      - "3000:3000"
+    command: [ "npm", "run", "start:prod" ]
